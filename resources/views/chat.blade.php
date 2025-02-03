@@ -7,13 +7,13 @@
 @endsection
 
 @section('content')
-    <div id="chat-box" style="border: 1px solid #ddd; padding: 10px; height: 300px; overflow-y: auto;">
+    <div id="chat-box" class="chat-box">
         <!-- Les messages du chat s'afficheront ici -->
     </div>
 
-    <form id="chat-form" style="margin-top: 10px;">
-        <input type="text" id="message" placeholder="Tapez votre message" required>
-        <button type="submit">Envoyer</button>
+    <form id="chat-form" class="chat-form">
+        <input type="text" id="message" placeholder="Tapez votre message" class="message-input" required>
+        <button type="submit" class="send-button">Envoyer</button>
     </form>
 
     <script>
@@ -52,7 +52,7 @@
         window.Echo.channel('chat-channel')
             .listen('message.sent', (event) => {
                 console.log('Message reçu:', event.message);
-                document.getElementById('chat-box').innerHTML += `<p><strong>${event.user.name}</strong>: ${event.message}</p>`;
+                document.getElementById('chat-box').innerHTML += `<div class="chat-message"><strong>${event.user.name}</strong>: ${event.message}</div>`;
                 document.getElementById('chat-box').scrollTop = document.getElementById('chat-box').scrollHeight;
             });
 
@@ -62,9 +62,56 @@
             .then(messages => {
                 let chatBox = document.getElementById('chat-box');
                 messages.reverse().forEach(message => {
-                    chatBox.innerHTML += `<p><strong>${message.user.name}</strong>: ${message.message}</p>`;
+                    chatBox.innerHTML += `<div class="chat-message"><strong>${message.user.name}</strong>: ${message.message}</div>`;
                 });
                 chatBox.scrollTop = chatBox.scrollHeight;
             });
     </script>
 @endsection
+
+<style>
+    .chat-box {
+        border: 1px solid #ddd;
+        padding: 10px;
+        height: 300px;
+        overflow-y: auto;
+        background-color: #f9f9f9; /* Couleur de fond */
+        display: flex;
+        flex-direction: column;
+    }
+
+    .chat-message {
+        background-color: #e1ffc7; /* Couleur de fond des messages */
+        padding: 8px 12px;
+        border-radius: 10px;
+        margin-bottom: 10px;
+        max-width: 70%;
+        align-self: flex-start; /* Alignement à gauche des messages */
+    }
+
+    .chat-form {
+        margin-top: 10px;
+        display: flex;
+    }
+
+    .message-input {
+        flex-grow: 1;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+    }
+
+    .send-button {
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        margin-left: 10px;
+        cursor: pointer;
+    }
+
+    .send-button:hover {
+        background-color: #0056b3; /* Fond plus foncé au survol */
+    }
+</style>
